@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Estudiantes</title>
+    <link rel="icon" type="image/png" href="/img/logo_instituto.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen p-6">
+
+    <!-- HEADER -->
+    <header class="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">
+                👋 Hola, <span class="text-indigo-600">
+                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['first_last_name']) ?>
+                </span>
+            </h1>
+            <p class="text-sm text-gray-600">Listado de estudiantes registrados</p>
+        </div>
+
+        <div class="flex gap-3 mt-4 md:mt-0">
+            <a href="/landing_becasconagopare/public/add-student"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                ➕ Nuevo Estudiante
+            </a>
+
+            <a href="/landing_becasconagopare/public/logout"
+                class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                🔒 Cerrar Sesión
+            </a>
+        </div>
+    </header>
+
+    <!-- BUSCADOR -->
+    <div class="mb-4 flex justify-end">
+        <input type="text" id="tableSearch"
+            placeholder="🔍 Buscar estudiante..."
+            class="border rounded-lg p-2 w-full md:w-1/3 focus:ring focus:ring-indigo-200">
+    </div>
+
+    <!-- TABLA -->
+    <div class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">📋 Estudiantes</h3>
+
+        <table class="min-w-full text-sm" id="studentsTable">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3 text-left">Nombre</th>
+                    <th class="px-4 py-3 text-left">Cédula</th>
+                    <th class="px-4 py-3 text-left">Correo</th>
+                    <th class="px-4 py-3 text-left">Celular</th>
+                    <th class="px-4 py-3 text-left">Carrera</th>
+                    <th class="px-4 py-3 text-center">Beca</th>
+                    <th class="px-4 py-3 text-left">Periodo</th>
+                    <th class="px-4 py-3 text-center">Acta</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php if (!empty($students)) : foreach ($students as $student) : ?>
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="px-4 py-3 font-medium text-gray-800">
+                                <?= htmlspecialchars(
+                                    trim(
+                                        $student['first_name'] . ' ' .
+                                            $student['second_name'] . ' ' .
+                                            $student['first_last_name'] . ' ' .
+                                            $student['second_last_name']
+                                    )
+                                ) ?>
+                            </td>
+
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['id_number']) ?></td>
+
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['email']) ?></td>
+
+                            <td class="px-4 py-3">
+                                <a href="https://wa.me/<?= htmlspecialchars($student['cellphone']) ?>"
+                                    target="_blank"
+                                    class="text-green-600 hover:underline">
+                                    <?= htmlspecialchars($student['cellphone']) ?>
+                                </a>
+                            </td>
+
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['program']) ?></td>
+
+                            <td class="px-4 py-3 text-center">
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
+                                    <?= htmlspecialchars($student['scholarship']) ?>
+                                </span>
+                            </td>
+
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['academic_period']) ?></td>
+
+                            <td class="px-4 py-3 text-center">
+                                <a href="/landing_becasconagopare/public/student-invoice/<?= $student['id'] ?>"
+                                    target="_blank"
+                                    class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs shadow">
+                                    📄 Ver Acta
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach;
+                else : ?>
+                    <tr>
+                        <td colspan="8" class="text-center py-6 text-gray-500">
+                            No hay estudiantes registrados.
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JS BUSCADOR -->
+    <script src="/js/stundet_list.js"></script>
+
+</body>
+
+</html>
