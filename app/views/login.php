@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso | Becas Superarse</title>
-    <link rel="icon" type="image/png" href="/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -29,7 +29,7 @@
     </style>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-end min-h-screen" style="background-image: url('/img/Fondo-Pagina-Becas-WebGrande.jpg');">
+<body class="bg-gray-50 flex items-center justify-end min-h-screen" style="background-image: url('/landingPage_BecasConagopare/public/img/Fondo-Pagina-Becas-WebGrande.jpg');">
 
     <div class="login-card bg-white p-10 rounded-xl w-full max-w-md border border-gray-200 mr-16">
 
@@ -52,7 +52,7 @@
             </div>
         <?php endif; ?>
 
-        <form action="/login" method="POST">
+        <form action="/landingPage_BecasConagopare/public/login" method="POST">
             <div class="mb-4">
                 <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Correo Electrónico</label>
                 <input type="email" id="email" name="email"
@@ -131,7 +131,7 @@
             });
         }
     </script>
-    <script src="/js/global.js"></script>
+    <script src="/landingPage_BecasConagopare/public/js/global.js"></script>
 
 </body>
 

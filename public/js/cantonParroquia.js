@@ -2,8 +2,11 @@
 const cantonSelect = document.getElementById('canton_id');
 const parishSelect = document.getElementById('parish_id');
 
-// Agrega un 'escuchador' de eventos al select de cantones
-cantonSelect.addEventListener('change', async function() {
+if (cantonSelect && parishSelect) {
+    const appBasePath = window.BASE_PATH || '/landingPage_BecasConagopare/public';
+
+    // Agrega un 'escuchador' de eventos al select de cantones
+    cantonSelect.addEventListener('change', async function() {
     // Obtiene el ID del cantón seleccionado
     const cantonId = this.value;
 
@@ -20,8 +23,7 @@ cantonSelect.addEventListener('change', async function() {
 
     try {
         // Realiza una petición fetch al servidor para obtener las parroquias
-        // La URL utiliza la variable global BASE_PATH que definimos en la vista
-        const response = await fetch(`/get-parishes?canton_id=${cantonId}`);
+        const response = await fetch(`${appBasePath}/get-parishes?canton_id=${encodeURIComponent(cantonId)}`);
 
         // Si la respuesta no es exitosa (por ejemplo, un error 404 o 500)
         if (!response.ok) {
@@ -50,4 +52,5 @@ cantonSelect.addEventListener('change', async function() {
         console.error('Error al obtener las parroquias:', error);
         parishSelect.innerHTML = '<option value="">Error al cargar</option>';
     }
-});
+    });
+}

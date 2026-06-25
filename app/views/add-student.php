@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Estudiante</title>
-    <link rel="icon" type="image/png" href="/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-gray-100 p-8">
     <div class="container mx-auto bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Registrar Estudiante Nuevo</h2>
-        <form action="/landing_becasconagopare/public/add-student" method="POST">
+        <form action="/landingPage_BecasConagopare/public/add-student" method="POST">
             <div class="mb-6">
                 <h3 class="text-lg font-semibold mb-4 text-gray-700">Datos Personales</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -135,13 +135,13 @@
                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Guardar Estudiante
                 </button>
-                <a href="/landing_becasconagopare/public/student-list" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">
+                <a href="/landingPage_BecasConagopare/public/student-list" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800">
                     Cancelar
                 </a>
             </div>
         </form>
     </div>
-    <script src="/js/add_student.js"></script>
+    <script src="/landingPage_BecasConagopare/public/js/add_student.js"></script>
 </body>
 
 </html>

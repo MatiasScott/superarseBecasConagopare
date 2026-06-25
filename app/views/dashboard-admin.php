@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
-    <link rel="icon" type="image/png" href="/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -33,19 +33,33 @@
     <header class="bg-white p-5 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center mb-6">
         <div>
             <h1 class="text-3xl font-bold text-gray-800">🎓 Panel de Administración</h1>
-            <p class="text-sm text-gray-600">Gestión de estudiantes</p>
+            <p class="text-sm text-gray-600">Gestión de estudiantes y usuarios administrativos</p>
         </div>
         <div class="flex space-x-2 mt-4 md:mt-0">
-            <a href="/register"
+            <a href="/landingPage_BecasConagopare/public/register"
                 class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 ➕ Registrar Usuario
             </a>
-            <a href="/logout"
+            <a href="/landingPage_BecasConagopare/public/logout"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔒 Cerrar Sesión
             </a>
         </div>
     </header>
+
+    <!-- Menú principal -->
+    <nav class="bg-white p-3 rounded-2xl shadow-lg mb-6">
+        <div class="flex gap-3 flex-wrap">
+            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=students"
+                class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'students' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+                📋 Estudiantes
+            </a>
+            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=users"
+                class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+                👥 Usuarios Administrativos
+            </a>
+        </div>
+    </nav>
 
     <!-- Cards métricas -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -67,11 +81,13 @@
         </div>
     </div>
 
+    <?php if (($view ?? 'students') === 'students') : ?>
+
     <!-- Filtros -->
     <div class="bg-white p-6 rounded-2xl shadow-lg mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-700">🔍 Filtros</h3>
     
-            <form action="/landing_becasconagopare/public/dashboard-admin" method="GET"
+            <form action="/landingPage_BecasConagopare/public/dashboard-admin" method="GET"
                 class="grid grid-cols-1 md:grid-cols-4 gap-4">
     
                 <div>
@@ -147,7 +163,7 @@
             </div>
 
             <div class="flex items-end">
-                <a href="/landing_becasconagopare/public/export-excel"
+                <a href="/landingPage_BecasConagopare/public/export-excel"
                     class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg shadow">
                     📥 Exportar
                 </a>
@@ -235,7 +251,7 @@
         <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl animate-fade-in">
             <h3 class="text-xl font-bold mb-4">✏️ Actualizar Estudiante</h3>
 
-            <form action="/landing_becasconagopare/public/update-student" method="POST" class="space-y-4">
+            <form action="/landingPage_BecasConagopare/public/update-student" method="POST" class="space-y-4">
                 <input type="hidden" name="id" id="modal-student-id">
 
                 <div>
@@ -270,7 +286,54 @@
     </div>
 
     <!-- JS -->
-    <script src="/js/dashboardAdmin.js"></script>
+    <script src="/landingPage_BecasConagopare/public/js/dashboardAdmin.js"></script>
+
+    <?php else : ?>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">👥 Usuarios del Sistema (Administrativos y Normales)</h3>
+
+        <table class="min-w-full text-sm">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3 text-left">Nombre</th>
+                    <th class="px-4 py-3 text-left">Correo</th>
+                    <th class="px-4 py-3 text-left">Teléfono</th>
+                    <th class="px-4 py-3 text-left">Tipo de Usuario</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php if (!empty($systemUsers)) : foreach ($systemUsers as $systemUser) : ?>
+                        <tr class="border-b hover:bg-gray-50 transition">
+                            <td class="px-4 py-3 font-medium text-gray-800">
+                                <?= htmlspecialchars(trim($systemUser['first_name'] . ' ' . ($systemUser['second_name'] ?? '') . ' ' . $systemUser['first_last_name'] . ' ' . ($systemUser['second_last_name'] ?? ''))) ?>
+                            </td>
+                            <td class="px-4 py-3"><?= htmlspecialchars($systemUser['email']) ?></td>
+                            <td class="px-4 py-3"><?= htmlspecialchars($systemUser['phone'] ?? 'N/A') ?></td>
+                            <td class="px-4 py-3">
+                                <?php if ((int)($systemUser['role'] ?? 0) === 1) : ?>
+                                    <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                        Administrador
+                                    </span>
+                                <?php else : ?>
+                                    <span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                        Usuario Normal
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                <?php endforeach;
+                else : ?>
+                    <tr>
+                        <td colspan="4" class="text-center py-6 text-gray-500">No hay usuarios registrados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <?php endif; ?>
 
 </body>
 

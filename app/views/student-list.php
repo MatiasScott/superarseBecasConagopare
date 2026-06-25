@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Estudiantes</title>
-    <link rel="icon" type="image/png" href="/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -23,12 +23,12 @@
         </div>
 
         <div class="flex gap-3 mt-4 md:mt-0">
-            <a href="/landing_becasconagopare/public/add-student"
+            <a href="/landingPage_BecasConagopare/public/add-student"
                 class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 ➕ Nuevo Estudiante
             </a>
 
-            <a href="/landing_becasconagopare/public/logout"
+            <a href="/landingPage_BecasConagopare/public/logout"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔒 Cerrar Sesión
             </a>
@@ -97,7 +97,7 @@
                             <td class="px-4 py-3"><?= htmlspecialchars($student['academic_period']) ?></td>
 
                             <td class="px-4 py-3 text-center">
-                                <a href="/landing_becasconagopare/public/student-invoice/<?= $student['id'] ?>"
+                                <a href="/landingPage_BecasConagopare/public/student-invoice/<?= $student['id'] ?>"
                                     target="_blank"
                                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs shadow">
                                     📄 Ver Acta
@@ -117,7 +117,7 @@
     </div>
 
     <!-- JS BUSCADOR -->
-    <script src="/js/stundet_list.js"></script>
+    <script src="/landingPage_BecasConagopare/public/js/stundet_list.js"></script>
 
 </body>
 

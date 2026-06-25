@@ -1,7 +1,7 @@
 <?php
 // Incluimos los controladores necesarios
-require_once __DIR__ . '/../../landing_becasConagopare/app/controllers/AuthController.php';
-require_once __DIR__ . '/../../landing_becasConagopare/app/controllers/StudentController.php';
+require_once __DIR__ . '/../app/controllers/AuthController.php';
+require_once __DIR__ . '/../app/controllers/StudentController.php';
 
 // Iniciamos la sesión si no está iniciada
 if (session_status() == PHP_SESSION_NONE) {
@@ -13,14 +13,14 @@ $session_timeout = 300; // 5 minutos = 300 segundos
 if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > $session_timeout)) {
     session_unset();
     session_destroy();
-    header("Location: /login");
+    header("Location: /landingPage_BecasConagopare/public/login");
     exit();
 }
 $_SESSION['last_activity'] = time(); // Actualiza el tiempo de la última actividad
 
 // Obtenemos la URI completa y eliminamos la parte del subdirectorio
 $uri = rtrim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
-$basePath = '/landing_becasconagopare/public';
+$basePath = '/landingPage_BecasConagopare/public';
 
 if (strpos($uri, $basePath) === 0) {
     $uri = substr($uri, strlen($basePath));

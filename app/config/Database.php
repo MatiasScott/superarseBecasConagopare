@@ -1,7 +1,7 @@
 <?php
 
 class Database {
-    private $host = 'localhost';
+    private $host = '23.111.136.182';
     private $user = 'superar1_Tics';
     private $password = '/Msvs5297*';
     private $dbname = 'superar1_becas_conagopare';

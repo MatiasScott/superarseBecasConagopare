@@ -54,4 +54,20 @@ class UserModel extends BaseModel
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function getSystemUsers()
+    {
+        $sql = "SELECT id, first_name, second_name, first_last_name, second_last_name, email, phone, role,
+                       CASE
+                           WHEN role = 1 THEN 'Administrador'
+                           ELSE 'Usuario Normal'
+                       END AS role_label
+                FROM users
+                ORDER BY role DESC, first_name ASC, first_last_name ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

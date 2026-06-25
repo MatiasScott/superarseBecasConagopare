@@ -13,7 +13,7 @@ class StudentController {
     public function exportToExcel() {
         // 1. Verificar si el usuario es un administrador (rol 1)
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 1) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 

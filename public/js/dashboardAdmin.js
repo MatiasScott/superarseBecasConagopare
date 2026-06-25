@@ -6,6 +6,10 @@ const searchInput = document.getElementById('tableSearch');
 const table = document.getElementById('studentsTable');
 
 function openModal(student) {
+    if (!modal || !studentIdInput || !fullNameInput || !statusSelect) {
+        return;
+    }
+
     studentIdInput.value = student.id;
 
     // Construir nombre completo sin valores vacíos
@@ -23,15 +27,21 @@ function openModal(student) {
 }
 
 function closeModal() {
+    if (!modal) {
+        return;
+    }
+
     modal.classList.add('hidden');
 }
 
-searchInput.addEventListener('keyup', function () {
-    const filter = this.value.toLowerCase();
-    const rows = table.querySelectorAll('tbody tr');
+if (searchInput && table) {
+    searchInput.addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
+        const rows = table.querySelectorAll('tbody tr');
 
-    rows.forEach(row => {
-        const text = row.innerText.toLowerCase();
-        row.style.display = text.includes(filter) ? '' : 'none';
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
     });
-});
+}

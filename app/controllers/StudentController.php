@@ -33,7 +33,7 @@ class StudentController
     {
         // Verifica si el usuario está autenticado y su rol (esto está bien)
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 
@@ -53,7 +53,7 @@ class StudentController
     {
         // Verifica si el usuario está autenticado y su rol
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 
@@ -100,7 +100,7 @@ class StudentController
             // Llama al método del modelo una sola vez y almacena el resultado
             if ($this->studentModel->addStudent($data)) {
                 $this->logModel->logAction($_SESSION['user_id'], 'Nuevo estudiante registrado');
-                header("Location: /landing_becasconagopare/public/student-list");
+                header("Location: /landingPage_BecasConagopare/public/student-list");
                 exit();
             } else {
                 echo "Error al registrar al estudiante.";
@@ -115,9 +115,11 @@ class StudentController
     {
         // Verifica que el usuario sea administrador
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 1) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
+
+        $view = (isset($_GET['view']) && $_GET['view'] === 'users') ? 'users' : 'students';
 
         // MÉTRICAS
         $totalStudents     = $this->studentModel->countAllStudents();
@@ -127,6 +129,9 @@ class StudentController
 
         // Obtiene la lista de usuarios para el filtro dinámico en la vista
         $users = $this->userModel->getUsersWithRegisteredStudents();
+
+        // Lista de usuarios del sistema para la vista de usuarios
+        $systemUsers = $this->userModel->getSystemUsers();
 
         // Prepara los filtros basados en los parámetros GET de la URL
         $filters = [];
@@ -166,7 +171,7 @@ class StudentController
     {
         // 1. Verificar si el usuario es un administrador (rol 1)
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 1) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 
@@ -248,7 +253,7 @@ class StudentController
     {
         // Verifica si el usuario tiene rol 0 para acceder
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 
@@ -334,7 +339,7 @@ class StudentController
             $_SESSION['user_role'] != 1 ||
             $_SERVER['REQUEST_METHOD'] !== 'POST'
         ) {
-            header("Location: /login");
+            header("Location: /landingPage_BecasConagopare/public/login");
             exit();
         }
 
@@ -346,7 +351,7 @@ class StudentController
         $this->studentModel->updateStudent($studentData);
 
         // REDIRECCIÓN CORRECTA
-        header("Location: /dashboard-admin");
+        header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
         exit();
     }
 }

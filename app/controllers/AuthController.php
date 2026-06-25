@@ -50,9 +50,9 @@ class AuthController
 
                 // Redirige según el rol
                 if ($user['role'] == 1) {
-                    header("Location: /dashboard-admin");
+                    header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
                 } else {
-                    header("Location: /student-list");
+                    header("Location: /landingPage_BecasConagopare/public/student-list");
                 }
                 exit();
             } else {
@@ -90,11 +90,11 @@ class AuthController
 
                 // Redirige a la página de login con un parámetro de éxito
                 //header("Location: /landing_becasconagopare/public/login?status=success");
-                header("Location: /dashboard-admin");
+                header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
                 exit();
             } else {
                 // Maneja el error
-                header("Location: /register?status=error");
+                header("Location: /landingPage_BecasConagopare/public/register?status=error");
                 exit();
             }
         } else {
@@ -131,7 +131,7 @@ class AuthController
     {
         $_SESSION = array();
         session_destroy();
-        header("Location: /login");
+        header("Location: /landingPage_BecasConagopare/public/login");
         exit();
     }
 
