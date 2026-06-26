@@ -568,9 +568,9 @@ class StudentController
         $pdf->Cell(0, 8, utf8_decode('Luis Granja (WhatsApp): +593 98 728 9072'), 0, 1);
         $pdf->Cell(0, 8, utf8_decode('Mayra Segarra (WhatsApp): +593 99 265 6109'), 0, 1);
         $pdf->Cell(0, 8, utf8_decode('Lizbeth Ochoa (WhatsApp): +593 98 718 3906'), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Jennifer Betancourt (WhatsApp): +593 98 718 3906'), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Noemi Toro (WhatsApp): +593 98 718 3906'), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Melany Artieda (WhatsApp): +593 98 718 3906'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Jennifer Betancourt (WhatsApp): +593 99 253 1588'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Noemi Toro (WhatsApp): +593 98 352 1821'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Melany Artieda (WhatsApp): +593 97 906 3291'), 0, 1);
 
         // 5. Pie de página (ejemplo)
         //$pdf->SetY(-1);
