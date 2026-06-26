@@ -3,6 +3,37 @@ require_once 'BaseModel.php';
 
 class StudentModel extends BaseModel
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->ensureStudentExtraColumns();
+    }
+
+    private function ensureStudentExtraColumns()
+    {
+        $columnsToEnsure = [
+            'is_convenio' => "ALTER TABLE students ADD COLUMN is_convenio TINYINT(1) NOT NULL DEFAULT 0",
+            'convenio_name' => "ALTER TABLE students ADD COLUMN convenio_name VARCHAR(255) NULL",
+            'convenio_percentage' => "ALTER TABLE students ADD COLUMN convenio_percentage DECIMAL(5,2) NULL",
+            'sede' => "ALTER TABLE students ADD COLUMN sede VARCHAR(150) NULL",
+        ];
+
+        foreach ($columnsToEnsure as $column => $sql) {
+            if (!$this->columnExists($column)) {
+                $this->db->exec($sql);
+            }
+        }
+    }
+
+    private function columnExists($columnName)
+    {
+        $stmt = $this->db->prepare("SHOW COLUMNS FROM students LIKE :column_name");
+        $stmt->bindParam(':column_name', $columnName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getAllStudents()
     {
         $stmt = $this->db->prepare("SELECT * FROM students");
@@ -48,6 +79,10 @@ class StudentModel extends BaseModel
                 residence_place, 
                 neighborhood,
                 registered_by_user_id,
+                is_convenio,
+                convenio_name,
+                convenio_percentage,
+                sede,
                 scholarship,
                 academic_period,
                 registration_date
@@ -69,6 +104,10 @@ class StudentModel extends BaseModel
                 :residence_place, 
                 :neighborhood,
                 :registered_by_user_id,
+                :is_convenio,
+                :convenio_name,
+                :convenio_percentage,
+                :sede,
                 :scholarship,
                 :academic_period,
                 :registration_date
@@ -94,7 +133,11 @@ class StudentModel extends BaseModel
         $stmt->bindParam(':residence_place', $data['residence_place']);
         $stmt->bindParam(':neighborhood', $data['neighborhood']);
         $stmt->bindParam(':registered_by_user_id', $data['registered_by_user_id']);
+        $stmt->bindParam(':is_convenio', $data['is_convenio'], PDO::PARAM_INT);
         $stmt->bindParam(':scholarship', $data['scholarship']);
+        $stmt->bindParam(':convenio_name', $data['convenio_name']);
+        $stmt->bindParam(':convenio_percentage', $data['convenio_percentage']);
+        $stmt->bindParam(':sede', $data['sede']);
         $stmt->bindParam(':academic_period', $data['academic_period']);
         $stmt->bindParam(':registration_date', $data['registration_date']);
 
@@ -203,6 +246,10 @@ class StudentModel extends BaseModel
                     address = :address,
                     residence_place = :residence_place,
                     neighborhood = :neighborhood,
+                    is_convenio = :is_convenio,
+                    convenio_name = :convenio_name,
+                    convenio_percentage = :convenio_percentage,
+                    sede = :sede,
                     scholarship = :scholarship,
                     academic_period = :academic_period
                 WHERE id = :id
@@ -225,6 +272,10 @@ class StudentModel extends BaseModel
         $stmt->bindParam(':address', $data['address']);
         $stmt->bindParam(':residence_place', $data['residence_place']);
         $stmt->bindParam(':neighborhood', $data['neighborhood']);
+        $stmt->bindParam(':is_convenio', $data['is_convenio'], PDO::PARAM_INT);
+        $stmt->bindParam(':convenio_name', $data['convenio_name']);
+        $stmt->bindParam(':convenio_percentage', $data['convenio_percentage']);
+        $stmt->bindParam(':sede', $data['sede']);
         $stmt->bindParam(':scholarship', $data['scholarship']);
         $stmt->bindParam(':academic_period', $data['academic_period']);
         $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);

@@ -61,9 +61,14 @@ class StudentController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Asigna beca desde configuración dinámica de carreras
             $program = trim($_POST['program'] ?? '');
-            $scholarship = $this->scholarshipProgramModel->getScholarshipByProgram($program);
+            $scholarshipPayload = $this->resolveScholarshipPayload($program, $_POST);
+
+            if ($scholarshipPayload === null) {
+                echo "Datos de convenio inválidos. Verifica nombre y porcentaje de beca.";
+                exit();
+            }
+
             $data = [
                 // ... (recupera todos los datos del formulario) ...
                 'first_name' => $_POST['first_name'],
@@ -83,7 +88,11 @@ class StudentController
                 'residence_place' => $_POST['residence_place'],
                 'neighborhood' => $_POST['neighborhood'],
                 'registered_by_user_id' => $_SESSION['user_id'],
-                'scholarship' => $scholarship,
+                'is_convenio' => $scholarshipPayload['is_convenio'],
+                'convenio_name' => $scholarshipPayload['convenio_name'],
+                'convenio_percentage' => $scholarshipPayload['convenio_percentage'],
+                'sede' => trim($_POST['sede'] ?? ''),
+                'scholarship' => $scholarshipPayload['scholarship'],
                 'academic_period' => $_POST['academic_period'],
                 'registration_date' => date('Y-m-d H:i:s'),
             ];
@@ -127,7 +136,12 @@ class StudentController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $program = trim($_POST['program'] ?? '');
-            $scholarship = $this->scholarshipProgramModel->getScholarshipByProgram($program);
+            $scholarshipPayload = $this->resolveScholarshipPayload($program, $_POST);
+
+            if ($scholarshipPayload === null) {
+                echo "Datos de convenio inválidos. Verifica nombre y porcentaje de beca.";
+                exit();
+            }
 
             $data = [
                 'id' => $studentId,
@@ -148,7 +162,11 @@ class StudentController
                 'address' => $_POST['address'],
                 'residence_place' => $_POST['residence_place'],
                 'neighborhood' => $_POST['neighborhood'],
-                'scholarship' => $scholarship,
+                'is_convenio' => $scholarshipPayload['is_convenio'],
+                'convenio_name' => $scholarshipPayload['convenio_name'],
+                'convenio_percentage' => $scholarshipPayload['convenio_percentage'],
+                'sede' => trim($_POST['sede'] ?? ''),
+                'scholarship' => $scholarshipPayload['scholarship'],
                 'academic_period' => $_POST['academic_period'],
             ];
 
@@ -170,6 +188,34 @@ class StudentController
         }
 
         require_once __DIR__ . '/../views/edit-student.php';
+    }
+
+    private function resolveScholarshipPayload($program, $requestData)
+    {
+        $isConvenio = isset($requestData['is_convenio']) && $requestData['is_convenio'] === '1';
+
+        if ($isConvenio) {
+            $convenioName = trim($requestData['convenio_name'] ?? '');
+            $convenioPercentage = $this->sanitizeScholarshipPercentage($requestData['convenio_percentage'] ?? null);
+
+            if ($convenioName === '' || $convenioPercentage === null) {
+                return null;
+            }
+
+            return [
+                'is_convenio' => 1,
+                'convenio_name' => $convenioName,
+                'convenio_percentage' => $convenioPercentage,
+                'scholarship' => $this->scholarshipProgramModel->formatScholarshipPercentage($convenioPercentage),
+            ];
+        }
+
+        return [
+            'is_convenio' => 0,
+            'convenio_name' => null,
+            'convenio_percentage' => null,
+            'scholarship' => $this->scholarshipProgramModel->getScholarshipByProgram($program),
+        ];
     }
 
     public function adminDashboard()
@@ -356,6 +402,8 @@ class StudentController
             'Dirección',
             'Lugar de Residencia',
             'Barrio',
+            'Convenio',
+            'Sede',
             'Beca',
             'Periodo Academico'
         ];
@@ -384,8 +432,10 @@ class StudentController
             $sheet->setCellValue('N' . $row, $student['address']);
             $sheet->setCellValue('O' . $row, $student['residence_place']);
             $sheet->setCellValue('P' . $row, $student['neighborhood']);
-            $sheet->setCellValue('Q' . $row, $student['scholarship']);
-            $sheet->setCellValue('R' . $row, $student['academic_period']);
+            $sheet->setCellValue('Q' . $row, ((int)($student['is_convenio'] ?? 0) === 1) ? ($student['convenio_name'] ?? 'Sí') : 'No');
+            $sheet->setCellValue('R' . $row, $student['sede'] ?? '');
+            $sheet->setCellValue('S' . $row, $student['scholarship']);
+            $sheet->setCellValue('T' . $row, $student['academic_period']);
             $row++;
         }
 

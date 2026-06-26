@@ -55,6 +55,8 @@
                     <th class="px-4 py-3 text-left">Correo</th>
                     <th class="px-4 py-3 text-left">Celular</th>
                     <th class="px-4 py-3 text-left">Carrera</th>
+                    <th class="px-4 py-3 text-left">Convenio</th>
+                    <th class="px-4 py-3 text-left">Sede</th>
                     <th class="px-4 py-3 text-center">Beca</th>
                     <th class="px-4 py-3 text-left">Periodo</th>
                     <th class="px-4 py-3 text-center">Editar</th>
@@ -90,6 +92,16 @@
 
                             <td class="px-4 py-3"><?= htmlspecialchars($student['program']) ?></td>
 
+                            <td class="px-4 py-3">
+                                <?php if ((int)($student['is_convenio'] ?? 0) === 1) : ?>
+                                    <?= htmlspecialchars($student['convenio_name'] ?? 'Sí') ?>
+                                <?php else : ?>
+                                    <span class="text-gray-500">No</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['sede'] ?? '') ?></td>
+
                             <td class="px-4 py-3 text-center">
                                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-700">
                                     <?= htmlspecialchars($student['scholarship']) ?>
@@ -116,7 +128,7 @@
                     <?php endforeach;
                 else : ?>
                     <tr>
-                        <td colspan="9" class="text-center py-6 text-gray-500">
+                        <td colspan="11" class="text-center py-6 text-gray-500">
                             No hay estudiantes registrados.
                         </td>
                     </tr>

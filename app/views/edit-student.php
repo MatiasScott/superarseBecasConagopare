@@ -110,6 +110,30 @@
                             endif; ?>
                         </select>
                     </div>
+
+                    <div class="mb-4">
+                        <label class="inline-flex items-center gap-2 text-gray-700 text-sm font-bold">
+                            <input type="checkbox" id="is_convenio" name="is_convenio" value="1" class="rounded border-gray-300" <?= (int)($studentSafe['is_convenio'] ?? 0) === 1 ? 'checked' : '' ?>>
+                            Es convenio
+                        </label>
+                    </div>
+
+                    <div id="convenio-fields" class="grid grid-cols-1 md:grid-cols-2 gap-4 <?= (int)($studentSafe['is_convenio'] ?? 0) === 1 ? '' : 'hidden' ?>">
+                        <div class="mb-4">
+                            <label for="convenio_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre del convenio:</label>
+                            <input type="text" id="convenio_name" name="convenio_name" value="<?= htmlspecialchars($studentSafe['convenio_name'] ?? '') ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej: Convenio Municipio X">
+                        </div>
+                        <div class="mb-4">
+                            <label for="convenio_percentage" class="block text-gray-700 text-sm font-bold mb-2">% beca por convenio:</label>
+                            <input type="number" id="convenio_percentage" name="convenio_percentage" min="0" max="100" step="0.01" value="<?= htmlspecialchars(isset($studentSafe['convenio_percentage']) ? rtrim(rtrim(number_format((float)$studentSafe['convenio_percentage'], 2, '.', ''), '0'), '.') : '') ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej: 35">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="sede" class="block text-gray-700 text-sm font-bold mb-2">Sede:</label>
+                        <input type="text" id="sede" name="sede" value="<?= htmlspecialchars($studentSafe['sede'] ?? '') ?>" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Ej: Loja" required>
+                    </div>
+
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Beca asignada</label>
                         <input type="text" id="scholarship-preview"

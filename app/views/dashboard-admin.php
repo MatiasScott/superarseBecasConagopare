@@ -160,6 +160,8 @@
                     <th class="px-4 py-3 text-left">Celular</th>
                     <th class="px-4 py-3 text-left">Correo</th>
                     <th class="px-4 py-3 text-left">Carrera</th>
+                    <th class="px-4 py-3 text-left">Convenio</th>
+                    <th class="px-4 py-3 text-left">Sede</th>
                     <th class="px-4 py-3 text-left">Registrado por</th>
                     <th class="px-4 py-3 text-left">Fecha</th>
                     <th class="px-4 py-3 text-left">Estado</th>
@@ -182,6 +184,14 @@
                             </td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['email']) ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['program']) ?></td>
+                            <td class="px-4 py-3">
+                                <?php if ((int)($student['is_convenio'] ?? 0) === 1) : ?>
+                                    <?= htmlspecialchars($student['convenio_name'] ?? 'Sí') ?>
+                                <?php else : ?>
+                                    <span class="text-gray-500">No</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['sede'] ?? '') ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['user_first_name'] . ' ' . $student['user_first_last_name']) ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['registration_date']) ?></td>
 
