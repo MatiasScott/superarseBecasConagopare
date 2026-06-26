@@ -40,6 +40,10 @@
                 class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 ➕ Registrar Usuario
             </a>
+            <a href="/landingPage_BecasConagopare/public/change-password"
+                class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                🔑 Cambiar Contraseña
+            </a>
             <a href="/landingPage_BecasConagopare/public/logout"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔒 Cerrar Sesión

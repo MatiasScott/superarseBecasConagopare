@@ -70,4 +70,14 @@ class UserModel extends BaseModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function updatePasswordById($userId, $passwordHash)
+    {
+        $sql = "UPDATE users SET password = :password WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':password', $passwordHash);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
 }

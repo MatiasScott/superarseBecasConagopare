@@ -135,6 +135,50 @@ class AuthController
         exit();
     }
 
+    public function changePassword()
+    {
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /landingPage_BecasConagopare/public/login");
+            exit();
+        }
+
+        $userId = (int)$_SESSION['user_id'];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $currentPassword = $_POST['current_password'] ?? '';
+            $newPassword = $_POST['new_password'] ?? '';
+            $confirmPassword = $_POST['confirm_password'] ?? '';
+
+            if ($newPassword !== $confirmPassword) {
+                header("Location: /landingPage_BecasConagopare/public/change-password?status=not_match");
+                exit();
+            }
+
+            if (strlen($newPassword) < 6) {
+                header("Location: /landingPage_BecasConagopare/public/change-password?status=weak_password");
+                exit();
+            }
+
+            $user = $this->userModel->findUserById($userId);
+            if (!$user || !password_verify($currentPassword, $user['password'])) {
+                header("Location: /landingPage_BecasConagopare/public/change-password?status=wrong_current");
+                exit();
+            }
+
+            $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
+            if ($this->userModel->updatePasswordById($userId, $passwordHash)) {
+                $this->logModel->logAction($userId, 'Usuario actualizó su contraseña');
+                header("Location: /landingPage_BecasConagopare/public/change-password?status=updated");
+                exit();
+            }
+
+            header("Location: /landingPage_BecasConagopare/public/change-password?status=error");
+            exit();
+        }
+
+        require_once __DIR__ . '/../views/change-password.php';
+    }
+
     private function sendWelcomeEmail($to, $password)
     {
         $mail = new PHPMailer(true);

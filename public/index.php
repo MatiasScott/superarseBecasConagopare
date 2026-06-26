@@ -43,6 +43,14 @@ if ($uri === '/' || $uri === '/login') {
     $authController->register();
 } elseif ($uri === '/logout') {
     $authController->logout();
+} elseif ($uri === '/change-password') {
+    if (method_exists($authController, 'changePassword')) {
+        $authController->changePassword();
+    } else {
+        http_response_code(500);
+        echo "No se pudo cargar el módulo de cambio de contraseña";
+        exit();
+    }
 } elseif ($uri === '/student-list') {
     $studentController->listStudents();
 } elseif ($uri === '/add-student') {
