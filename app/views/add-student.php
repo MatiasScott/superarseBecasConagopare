@@ -138,6 +138,16 @@
                     </div>
 
                     <div class="mb-4">
+                        <label for="modalidad" class="block text-gray-700 text-sm font-bold mb-2">Modalidad:</label>
+                        <select id="modalidad" name="modalidad" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                            <option value="">Seleccione</option>
+                            <option value="Presencial">Presencial</option>
+                            <option value="Virtual">Virtual</option>
+                            <option value="Híbrida">Híbrida</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Beca asignada</label>
                         <input type="text" id="scholarship-preview"
                             class="w-full border rounded-lg p-2 bg-gray-100 text-gray-700"

@@ -92,6 +92,7 @@ class StudentController
                 'convenio_name' => $scholarshipPayload['convenio_name'],
                 'convenio_percentage' => $scholarshipPayload['convenio_percentage'],
                 'sede' => trim($_POST['sede'] ?? ''),
+                'modalidad' => trim($_POST['modalidad'] ?? ''),
                 'scholarship' => $scholarshipPayload['scholarship'],
                 'academic_period' => $_POST['academic_period'],
                 'registration_date' => date('Y-m-d H:i:s'),
@@ -166,6 +167,7 @@ class StudentController
                 'convenio_name' => $scholarshipPayload['convenio_name'],
                 'convenio_percentage' => $scholarshipPayload['convenio_percentage'],
                 'sede' => trim($_POST['sede'] ?? ''),
+                'modalidad' => trim($_POST['modalidad'] ?? ''),
                 'scholarship' => $scholarshipPayload['scholarship'],
                 'academic_period' => $_POST['academic_period'],
             ];
@@ -404,6 +406,7 @@ class StudentController
             'Barrio',
             'Convenio',
             'Sede',
+            'Modalidad',
             'Beca',
             'Periodo Academico'
         ];
@@ -434,8 +437,9 @@ class StudentController
             $sheet->setCellValue('P' . $row, $student['neighborhood']);
             $sheet->setCellValue('Q' . $row, ((int)($student['is_convenio'] ?? 0) === 1) ? ($student['convenio_name'] ?? 'Sí') : 'No');
             $sheet->setCellValue('R' . $row, $student['sede'] ?? '');
-            $sheet->setCellValue('S' . $row, $student['scholarship']);
-            $sheet->setCellValue('T' . $row, $student['academic_period']);
+            $sheet->setCellValue('S' . $row, $student['modalidad'] ?? '');
+            $sheet->setCellValue('T' . $row, $student['scholarship']);
+            $sheet->setCellValue('U' . $row, $student['academic_period']);
             $row++;
         }
 
@@ -488,10 +492,20 @@ class StudentController
         $pdf->SetFont('Arial', 'B', 14);
         $pdf->Cell(0, 10, utf8_decode('DATOS DEL ESTUDIANTE'), 0, 1, 'L');
         $pdf->SetFont('Arial', '', 12);
-        $pdf->Cell(0, 8, utf8_decode('Nombre Completo: ' . $student['first_name'] . ' ' . $student['first_last_name']), 0, 1);
+        $fullName = trim(($student['first_name'] ?? '') . ' ' . ($student['second_name'] ?? '') . ' ' . ($student['first_last_name'] ?? '') . ' ' . ($student['second_last_name'] ?? ''));
+        $pdf->Cell(0, 8, utf8_decode('Nombre Completo: ' . $fullName), 0, 1);
         $pdf->Cell(0, 8, utf8_decode('Número de Cédula: ' . $student['id_number']), 0, 1);
         $pdf->Cell(0, 8, utf8_decode('Carrera: ' . $student['program']), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Beca Asignada: ' . $student['scholarship']), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Sede: ' . ($student['sede'] ?? 'No registrada')), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Modalidad: ' . ($student['modalidad'] ?? 'No registrada')), 0, 1);
+
+        if ((int)($student['is_convenio'] ?? 0) === 1) {
+            $pdf->Cell(0, 8, utf8_decode('Convenio: ' . ($student['convenio_name'] ?? 'No especificado')), 0, 1);
+            $pdf->Cell(0, 8, utf8_decode('Porcentaje Convenio: ' . ($student['scholarship'] ?? 'N/A')), 0, 1);
+        } else {
+            $pdf->Cell(0, 8, utf8_decode('Tipo de Beca: Beca regular por carrera'), 0, 1);
+            $pdf->Cell(0, 8, utf8_decode('Beca Asignada: ' . ($student['scholarship'] ?? 'N/A')), 0, 1);
+        }
         $pdf->Ln(10);
         $pdf->SetLineWidth(0.2);
         $pdf->Line(20, $pdf->GetY(), 190, $pdf->GetY()); // Línea divisoria
@@ -513,6 +527,13 @@ class StudentController
         $pdf->Cell(0, 6, utf8_decode('Cuenta de Ahorros: 13748241'), 0, 1);
         $pdf->Cell(0, 6, utf8_decode('Nombre del Beneficiario: Instituto Superior Tecnológico Superarse'), 0, 1);
         $pdf->Cell(0, 6, utf8_decode('RUC: 1792951704001'), 0, 1);
+        $pdf->Ln(8);
+
+        $pdf->SetFillColor(240, 240, 240);
+        $pdf->Cell(0, 8, 'BANCO DEL PICHINCHA', 0, 1, 'L', true);
+        $pdf->Cell(0, 6, utf8_decode('Cuenta Corriente: 2100198810'), 0, 1);
+        $pdf->Cell(0, 6, utf8_decode('Nombre del Beneficiario: Instituto Superior Tecnológico Superarse'), 0, 1);
+        $pdf->Cell(0, 6, utf8_decode('RUC: 1792951704001'), 0, 1);
         $pdf->Ln(10);
         $pdf->SetLineWidth(0.2);
         $pdf->Line(20, $pdf->GetY(), 190, $pdf->GetY()); // Línea divisoria
@@ -523,11 +544,14 @@ class StudentController
         $pdf->Cell(0, 10, utf8_decode('CONTACTOS DE INTERÉS'), 0, 1, 'L');
         $pdf->SetFont('Arial', '', 12);
         $pdf->Cell(0, 8, utf8_decode('Luis Granja (WhatsApp): +593 98 728 9072'), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Mayra Sarango (WhatsApp): +593 99 265 6109'), 0, 1);
-        $pdf->Cell(0, 8, utf8_decode('Lisbeth Ochoa (WhatsApp): +593 98 718 3906'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Mayra Segarra (WhatsApp): +593 99 265 6109'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Lizbeth Ochoa (WhatsApp): +593 98 718 3906'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Jennifer Betancourt (WhatsApp): +593 98 718 3906'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Noemi Toro (WhatsApp): +593 98 718 3906'), 0, 1);
+        $pdf->Cell(0, 8, utf8_decode('Melany Artieda (WhatsApp): +593 98 718 3906'), 0, 1);
 
         // 5. Pie de página (ejemplo)
-        $pdf->SetY(-30);
+        //$pdf->SetY(-1);
         $pdf->SetFont('Arial', 'I', 10);
         $pdf->Cell(0, 10, utf8_decode('Documento generado el ' . date('d/m/Y') . '. Sujeto a los términos y condiciones de la beca.'), 0, 0, 'C');
 

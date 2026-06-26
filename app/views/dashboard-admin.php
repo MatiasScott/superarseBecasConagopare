@@ -162,6 +162,7 @@
                     <th class="px-4 py-3 text-left">Carrera</th>
                     <th class="px-4 py-3 text-left">Convenio</th>
                     <th class="px-4 py-3 text-left">Sede</th>
+                    <th class="px-4 py-3 text-left">Modalidad</th>
                     <th class="px-4 py-3 text-left">Registrado por</th>
                     <th class="px-4 py-3 text-left">Fecha</th>
                     <th class="px-4 py-3 text-left">Estado</th>
@@ -192,6 +193,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['sede'] ?? '') ?></td>
+                            <td class="px-4 py-3"><?= htmlspecialchars($student['modalidad'] ?? '') ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['user_first_name'] . ' ' . $student['user_first_last_name']) ?></td>
                             <td class="px-4 py-3"><?= htmlspecialchars($student['registration_date']) ?></td>
 

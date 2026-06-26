@@ -16,6 +16,7 @@ class StudentModel extends BaseModel
             'convenio_name' => "ALTER TABLE students ADD COLUMN convenio_name VARCHAR(255) NULL",
             'convenio_percentage' => "ALTER TABLE students ADD COLUMN convenio_percentage DECIMAL(5,2) NULL",
             'sede' => "ALTER TABLE students ADD COLUMN sede VARCHAR(150) NULL",
+            'modalidad' => "ALTER TABLE students ADD COLUMN modalidad VARCHAR(100) NULL",
         ];
 
         foreach ($columnsToEnsure as $column => $sql) {
@@ -83,6 +84,7 @@ class StudentModel extends BaseModel
                 convenio_name,
                 convenio_percentage,
                 sede,
+                modalidad,
                 scholarship,
                 academic_period,
                 registration_date
@@ -108,6 +110,7 @@ class StudentModel extends BaseModel
                 :convenio_name,
                 :convenio_percentage,
                 :sede,
+                :modalidad,
                 :scholarship,
                 :academic_period,
                 :registration_date
@@ -138,6 +141,7 @@ class StudentModel extends BaseModel
         $stmt->bindParam(':convenio_name', $data['convenio_name']);
         $stmt->bindParam(':convenio_percentage', $data['convenio_percentage']);
         $stmt->bindParam(':sede', $data['sede']);
+        $stmt->bindParam(':modalidad', $data['modalidad']);
         $stmt->bindParam(':academic_period', $data['academic_period']);
         $stmt->bindParam(':registration_date', $data['registration_date']);
 
@@ -250,6 +254,7 @@ class StudentModel extends BaseModel
                     convenio_name = :convenio_name,
                     convenio_percentage = :convenio_percentage,
                     sede = :sede,
+                    modalidad = :modalidad,
                     scholarship = :scholarship,
                     academic_period = :academic_period
                 WHERE id = :id
@@ -276,6 +281,7 @@ class StudentModel extends BaseModel
         $stmt->bindParam(':convenio_name', $data['convenio_name']);
         $stmt->bindParam(':convenio_percentage', $data['convenio_percentage']);
         $stmt->bindParam(':sede', $data['sede']);
+        $stmt->bindParam(':modalidad', $data['modalidad']);
         $stmt->bindParam(':scholarship', $data['scholarship']);
         $stmt->bindParam(':academic_period', $data['academic_period']);
         $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
