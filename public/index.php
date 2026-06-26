@@ -51,6 +51,9 @@ if ($uri === '/' || $uri === '/login') {
     $studentController->adminDashboard();
 } elseif ($uri === '/export-excel') {
     $studentController->exportToExcel();
+} elseif (preg_match('/^\/edit-student\/([0-9]+)$/', $uri, $matches)) {
+    $studentId = $matches[1];
+    $studentController->editStudent($studentId);
 } elseif (preg_match('/^\/student-invoice\/([0-9]+)$/', $uri, $matches)) {
     // ¡Esta expresión regular ahora funciona!
     // Captura el ID del estudiante y lo guarda en $matches[1]

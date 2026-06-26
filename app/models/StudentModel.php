@@ -167,6 +167,71 @@ class StudentModel extends BaseModel
 
         return $stmt->execute();
     }
+
+    public function getStudentByIdAndUserId($studentId, $userId)
+    {
+        $sql = "SELECT *
+                FROM students
+                WHERE id = :id
+                  AND registered_by_user_id = :user_id
+                LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $studentId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateStudentByUser($data)
+    {
+        $sql = "UPDATE students
+                SET first_name = :first_name,
+                    second_name = :second_name,
+                    first_last_name = :first_last_name,
+                    second_last_name = :second_last_name,
+                    id_type = :id_type,
+                    id_number = :id_number,
+                    gender = :gender,
+                    email = :email,
+                    phone = :phone,
+                    cellphone = :cellphone,
+                    birth_date = :birth_date,
+                    program = :program,
+                    birth_place = :birth_place,
+                    address = :address,
+                    residence_place = :residence_place,
+                    neighborhood = :neighborhood,
+                    scholarship = :scholarship,
+                    academic_period = :academic_period
+                WHERE id = :id
+                  AND registered_by_user_id = :registered_by_user_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':first_name', $data['first_name']);
+        $stmt->bindParam(':second_name', $data['second_name']);
+        $stmt->bindParam(':first_last_name', $data['first_last_name']);
+        $stmt->bindParam(':second_last_name', $data['second_last_name']);
+        $stmt->bindParam(':id_type', $data['id_type']);
+        $stmt->bindParam(':id_number', $data['id_number']);
+        $stmt->bindParam(':gender', $data['gender']);
+        $stmt->bindParam(':email', $data['email']);
+        $stmt->bindParam(':phone', $data['phone']);
+        $stmt->bindParam(':cellphone', $data['cellphone']);
+        $stmt->bindParam(':birth_date', $data['birth_date']);
+        $stmt->bindParam(':program', $data['program']);
+        $stmt->bindParam(':birth_place', $data['birth_place']);
+        $stmt->bindParam(':address', $data['address']);
+        $stmt->bindParam(':residence_place', $data['residence_place']);
+        $stmt->bindParam(':neighborhood', $data['neighborhood']);
+        $stmt->bindParam(':scholarship', $data['scholarship']);
+        $stmt->bindParam(':academic_period', $data['academic_period']);
+        $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':registered_by_user_id', $data['registered_by_user_id'], PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
     
     public function countAllStudents()
     {

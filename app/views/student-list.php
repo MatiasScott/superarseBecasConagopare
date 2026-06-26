@@ -10,13 +10,14 @@
 </head>
 
 <body class="bg-gradient-to-br from-gray-100 to-gray-200 min-h-screen p-6">
+    <?php $userSafe = isset($user) && is_array($user) ? $user : []; ?>
 
     <!-- HEADER -->
     <header class="bg-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center mb-6">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">
                 👋 Hola, <span class="text-indigo-600">
-                    <?= htmlspecialchars($user['first_name'] . ' ' . $user['first_last_name']) ?>
+                    <?= htmlspecialchars(($userSafe['first_name'] ?? '') . ' ' . ($userSafe['first_last_name'] ?? '')) ?>
                 </span>
             </h1>
             <p class="text-sm text-gray-600">Listado de estudiantes registrados</p>
@@ -56,6 +57,7 @@
                     <th class="px-4 py-3 text-left">Carrera</th>
                     <th class="px-4 py-3 text-center">Beca</th>
                     <th class="px-4 py-3 text-left">Periodo</th>
+                    <th class="px-4 py-3 text-center">Editar</th>
                     <th class="px-4 py-3 text-center">Acta</th>
                 </tr>
             </thead>
@@ -97,6 +99,13 @@
                             <td class="px-4 py-3"><?= htmlspecialchars($student['academic_period']) ?></td>
 
                             <td class="px-4 py-3 text-center">
+                                <a href="/landingPage_BecasConagopare/public/edit-student/<?= (int)$student['id'] ?>"
+                                    class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs shadow">
+                                    ✏️ Editar
+                                </a>
+                            </td>
+
+                            <td class="px-4 py-3 text-center">
                                 <a href="/landingPage_BecasConagopare/public/student-invoice/<?= $student['id'] ?>"
                                     target="_blank"
                                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs shadow">
@@ -107,7 +116,7 @@
                     <?php endforeach;
                 else : ?>
                     <tr>
-                        <td colspan="8" class="text-center py-6 text-gray-500">
+                        <td colspan="9" class="text-center py-6 text-gray-500">
                             No hay estudiantes registrados.
                         </td>
                     </tr>

@@ -109,6 +109,69 @@ class StudentController
         }
     }
 
+    public function editStudent($studentId)
+    {
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
+            header("Location: /landingPage_BecasConagopare/public/login");
+            exit();
+        }
+
+        $studentId = (int)$studentId;
+        $userId = (int)$_SESSION['user_id'];
+
+        $student = $this->studentModel->getStudentByIdAndUserId($studentId, $userId);
+        if (!$student) {
+            header("Location: /landingPage_BecasConagopare/public/student-list");
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $program = trim($_POST['program'] ?? '');
+            $scholarship = $this->scholarshipProgramModel->getScholarshipByProgram($program);
+
+            $data = [
+                'id' => $studentId,
+                'registered_by_user_id' => $userId,
+                'first_name' => $_POST['first_name'],
+                'second_name' => $_POST['second_name'],
+                'first_last_name' => $_POST['first_last_name'],
+                'second_last_name' => $_POST['second_last_name'],
+                'id_type' => $_POST['id_type'],
+                'id_number' => $_POST['id_number'],
+                'gender' => $_POST['gender'],
+                'email' => $_POST['email'],
+                'phone' => $_POST['phone'],
+                'cellphone' => $_POST['cellphone'],
+                'birth_date' => $_POST['birth_date'],
+                'program' => $program,
+                'birth_place' => $_POST['birth_place'],
+                'address' => $_POST['address'],
+                'residence_place' => $_POST['residence_place'],
+                'neighborhood' => $_POST['neighborhood'],
+                'scholarship' => $scholarship,
+                'academic_period' => $_POST['academic_period'],
+            ];
+
+            if ($this->studentModel->updateStudentByUser($data)) {
+                $this->logModel->logAction($userId, 'Estudiante actualizado por usuario');
+                header("Location: /landingPage_BecasConagopare/public/student-list");
+                exit();
+            }
+
+            echo "Error al actualizar el estudiante.";
+            exit();
+        }
+
+        $programs = $this->scholarshipProgramModel->getAllPrograms();
+        $programScholarships = [];
+
+        foreach ($programs as $programItem) {
+            $programScholarships[$programItem['name']] = (float)$programItem['scholarship_percentage'];
+        }
+
+        require_once __DIR__ . '/../views/edit-student.php';
+    }
+
     public function adminDashboard()
     {
         // Verifica que el usuario sea administrador
@@ -348,8 +411,8 @@ class StudentController
             exit();
         }
 
-        // Obtener los datos del estudiante
-        $student = $this->studentModel->getStudentById($studentId);
+        // Obtener los datos del estudiante del usuario logueado
+        $student = $this->studentModel->getStudentByIdAndUserId((int)$studentId, (int)$_SESSION['user_id']);
 
         if (!$student) {
             exit("Estudiante no encontrado.");
