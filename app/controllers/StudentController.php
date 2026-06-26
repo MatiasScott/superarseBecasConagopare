@@ -6,6 +6,7 @@ require_once __DIR__ . '/../models/UserModel.php';
 require_once __DIR__ . '/../models/LogModel.php';
 require_once __DIR__ . '/../models/CantonModel.php';
 require_once __DIR__ . '/../models/ParishModel.php';
+require_once __DIR__ . '/../models/ScholarshipProgramModel.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Fpdf\Fpdf;
@@ -19,6 +20,7 @@ class StudentController
     private $cantonModel;
     private $parishModel;
     private $userModel;
+    private $scholarshipProgramModel;
 
     public function __construct()
     {
@@ -27,6 +29,7 @@ class StudentController
         $this->cantonModel = new CantonModel();
         $this->parishModel = new ParishModel();
         $this->userModel = new UserModel();
+        $this->scholarshipProgramModel = new ScholarshipProgramModel();
     }
 
     public function listStudents()
@@ -58,21 +61,9 @@ class StudentController
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lógica para asignar la beca automáticamente
-            $program = $_POST['program'];
-            $scholarship = '20%'; // Valor por defecto
-
-            $programs30Percent = [
-                'Tecnología Superior en Topografía',
-                'Tecnólogo en Minería',
-                'Tecnología Superior en Enfermería Veterinaria',
-                'Técnico Superior en Ventas Estratégicas con IA',
-                'Tecnólogo en Producción Animal'
-            ];
-
-            if (in_array($program, $programs30Percent)) {
-                $scholarship = '30%';
-            }
+            // Asigna beca desde configuración dinámica de carreras
+            $program = trim($_POST['program'] ?? '');
+            $scholarship = $this->scholarshipProgramModel->getScholarshipByProgram($program);
             $data = [
                 // ... (recupera todos los datos del formulario) ...
                 'first_name' => $_POST['first_name'],
@@ -107,6 +98,13 @@ class StudentController
             }
         } else {
             // Petición GET, muestra la vista
+            $programs = $this->scholarshipProgramModel->getAllPrograms();
+            $programScholarships = [];
+
+            foreach ($programs as $programItem) {
+                $programScholarships[$programItem['name']] = (float)$programItem['scholarship_percentage'];
+            }
+
             require_once __DIR__ . '/../views/add-student.php';
         }
     }
@@ -119,7 +117,14 @@ class StudentController
             exit();
         }
 
-        $view = (isset($_GET['view']) && $_GET['view'] === 'users') ? 'users' : 'students';
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $this->handleScholarshipConfigPost();
+        }
+
+        $allowedViews = ['students', 'users', 'scholarships'];
+        $view = isset($_GET['view']) && in_array($_GET['view'], $allowedViews, true)
+            ? $_GET['view']
+            : 'students';
 
         // MÉTRICAS
         $totalStudents     = $this->studentModel->countAllStudents();
@@ -133,13 +138,19 @@ class StudentController
         // Lista de usuarios del sistema para la vista de usuarios
         $systemUsers = $this->userModel->getSystemUsers();
 
+        $configuredPrograms = $this->scholarshipProgramModel->getAllPrograms();
+        $allConfiguredPrograms = $this->scholarshipProgramModel->getAllPrograms(false);
+
         // Prepara los filtros basados en los parámetros GET de la URL
         $filters = [];
-        if (isset($_GET['program']) && !empty($_GET['program'])) {
-            $filters['program'] = $_GET['program'];
+        $selectedProgram = isset($_GET['program']) ? trim($_GET['program']) : '';
+        $selectedRegisteredBy = isset($_GET['registered_by_user_id']) ? trim($_GET['registered_by_user_id']) : '';
+
+        if ($selectedProgram !== '') {
+            $filters['program'] = $selectedProgram;
         }
-        if (isset($_GET['registered_by_user_id']) && !empty($_GET['registered_by_user_id'])) {
-            $filters['registered_by_user_id'] = $_GET['registered_by_user_id'];
+        if ($selectedRegisteredBy !== '') {
+            $filters['registered_by_user_id'] = $selectedRegisteredBy;
         }
 
         // Obtiene la lista de estudiantes filtrada
@@ -147,6 +158,86 @@ class StudentController
 
         // Carga la vista del dashboard con los datos
         require_once __DIR__ . '/../views/dashboard-admin.php';
+    }
+
+    private function handleScholarshipConfigPost()
+    {
+        $action = $_POST['action'] ?? '';
+
+        try {
+            if ($action === 'create_program') {
+                $name = trim($_POST['program_name'] ?? '');
+                $percentage = $this->sanitizeScholarshipPercentage($_POST['scholarship_percentage'] ?? null);
+
+                if ($name === '' || $percentage === null) {
+                    $this->redirectScholarshipConfig('invalid_data');
+                }
+
+                if ($this->scholarshipProgramModel->existsByName($name)) {
+                    $this->redirectScholarshipConfig('program_exists');
+                }
+
+                $this->scholarshipProgramModel->createProgram($name, $percentage);
+                $this->redirectScholarshipConfig('created');
+            }
+
+            if ($action === 'update_program') {
+                $id = isset($_POST['program_id']) ? (int)$_POST['program_id'] : 0;
+                $name = trim($_POST['program_name'] ?? '');
+                $percentage = $this->sanitizeScholarshipPercentage($_POST['scholarship_percentage'] ?? null);
+
+                if ($id <= 0 || $name === '' || $percentage === null) {
+                    $this->redirectScholarshipConfig('invalid_data');
+                }
+
+                if ($this->scholarshipProgramModel->existsByName($name, $id)) {
+                    $this->redirectScholarshipConfig('program_exists');
+                }
+
+                $this->scholarshipProgramModel->updateProgram($id, $name, $percentage);
+                $this->redirectScholarshipConfig('updated');
+            }
+
+            if ($action === 'activate_program' || $action === 'deactivate_program') {
+                $id = isset($_POST['program_id']) ? (int)$_POST['program_id'] : 0;
+                if ($id <= 0) {
+                    $this->redirectScholarshipConfig('invalid_data');
+                }
+
+                $this->scholarshipProgramModel->updateProgramStatus($id, $action === 'activate_program');
+                $this->redirectScholarshipConfig($action === 'activate_program' ? 'activated' : 'deactivated');
+            }
+        } catch (PDOException $e) {
+            error_log('Error al guardar configuración de becas: ' . $e->getMessage());
+            $this->redirectScholarshipConfig('save_error');
+        }
+
+        $this->redirectScholarshipConfig('invalid_action');
+    }
+
+    private function sanitizeScholarshipPercentage($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $normalizedValue = str_replace(',', '.', (string)$value);
+        if (!is_numeric($normalizedValue)) {
+            return null;
+        }
+
+        $percentage = (float)$normalizedValue;
+        if ($percentage < 0 || $percentage > 100) {
+            return null;
+        }
+
+        return $percentage;
+    }
+
+    private function redirectScholarshipConfig($status)
+    {
+        header('Location: /landingPage_BecasConagopare/public/dashboard-admin?view=scholarships&status=' . urlencode($status));
+        exit();
     }
 
     public function getParishes()

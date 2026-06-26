@@ -58,6 +58,10 @@
                 class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
                 👥 Usuarios Administrativos
             </a>
+            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships"
+                class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'scholarships' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
+                🎯 Carreras y Becas
+            </a>
         </div>
     </nav>
 
@@ -96,46 +100,13 @@
             class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200">
             
             <option value="">Todas</option>
-    
-            <option value="Técnico Superior en Ventas Estratégicas con IA">
-                Técnico Superior en Ventas Estratégicas con IA
-            </option>
-    
-            <option value="Tecnólogo en Educación Básica">
-                Tecnólogo en Educación Básica
-            </option>
-    
-            <option value="Tecnología Superior en Enfermería Veterinaria">
-                Tecnología Superior en Enfermería Veterinaria
-            </option>
-    
-            <option value="Tecnólogo en Producción Animal">
-                Tecnólogo en Producción Animal
-            </option>
-    
-            <option value="Técnico Superior en Marketing Digital">
-                Técnico Superior en Marketing Digital
-            </option>
-    
-            <option value="Seguridad e Higiene del Trabajo">
-                Seguridad e Higiene del Trabajo
-            </option>
-    
-            <option value="Seguridad y Prevención de Riesgos Laborales">
-                Seguridad y Prevención de Riesgos Laborales
-            </option>
-    
-            <option value="Técnico Superior en Administración">
-                Técnico Superior en Administración
-            </option>
-    
-            <option value="Tecnología Superior en Topografía">
-                Tecnología Superior en Topografía
-            </option>
-    
-            <option value="Tecnólogo en Minería">
-                Tecnólogo en Minería
-            </option>
+            <?php if (!empty($configuredPrograms)) : foreach ($configuredPrograms as $configuredProgram) : ?>
+                <option value="<?= htmlspecialchars($configuredProgram['name']) ?>"
+                    <?= ($selectedProgram ?? '') === $configuredProgram['name'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($configuredProgram['name']) ?>
+                </option>
+            <?php endforeach;
+            endif; ?>
     
         </select>
     </div>
@@ -147,7 +118,7 @@
                     class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200">
                     <option value="">Todos</option>
                     <?php if (!empty($users)) : foreach ($users as $user) : ?>
-                            <option value="<?= $user['id'] ?>">
+                            <option value="<?= $user['id'] ?>" <?= (string)($selectedRegisteredBy ?? '') === (string)$user['id'] ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($user['first_name'] . ' ' . $user['first_last_name']) ?>
                             </option>
                     <?php endforeach;
@@ -288,7 +259,7 @@
     <!-- JS -->
     <script src="/landingPage_BecasConagopare/public/js/dashboardAdmin.js"></script>
 
-    <?php else : ?>
+    <?php elseif (($view ?? 'students') === 'users') : ?>
 
     <div class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
         <h3 class="text-lg font-bold mb-4 text-gray-700">👥 Usuarios del Sistema (Administrativos y Normales)</h3>
@@ -327,6 +298,140 @@
                 else : ?>
                     <tr>
                         <td colspan="4" class="text-center py-6 text-gray-500">No hay usuarios registrados.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <?php else : ?>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg mb-6">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">➕ Nueva carrera y porcentaje de beca</h3>
+
+        <?php if (isset($_GET['status']) && $_GET['status'] === 'created') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm">Carrera creada correctamente.</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'updated') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-blue-100 text-blue-700 text-sm">Carrera actualizada correctamente.</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'program_exists') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-amber-100 text-amber-700 text-sm">Ya existe una carrera con ese nombre.</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'invalid_data') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">Datos inválidos. Verifica nombre y porcentaje (0 a 100).</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'save_error') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">No se pudo guardar. Revisa el log del sistema.</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'activated') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-700 text-sm">Carrera activada correctamente.</div>
+        <?php elseif (isset($_GET['status']) && $_GET['status'] === 'deactivated') : ?>
+            <div class="mb-4 p-3 rounded-lg bg-yellow-100 text-yellow-800 text-sm">Carrera desactivada correctamente.</div>
+        <?php endif; ?>
+
+        <form action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <input type="hidden" name="action" value="create_program">
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre de la carrera</label>
+                <input
+                    type="text"
+                    name="program_name"
+                    class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200"
+                    placeholder="Ej: Tecnología en Desarrollo de Software"
+                    required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">% de beca</label>
+                <input
+                    type="number"
+                    name="scholarship_percentage"
+                    min="0"
+                    max="100"
+                    step="0.01"
+                    class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200"
+                    placeholder="20"
+                    required>
+            </div>
+
+            <div class="flex items-end">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg shadow">
+                    Guardar carrera
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg overflow-x-auto">
+        <h3 class="text-lg font-bold mb-4 text-gray-700">🎯 Configuración actual de carreras</h3>
+
+        <table class="min-w-full text-sm">
+            <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
+                <tr>
+                    <th class="px-4 py-3 text-left">Carrera</th>
+                    <th class="px-4 py-3 text-left">% Beca</th>
+                    <th class="px-4 py-3 text-left">Estado</th>
+                    <th class="px-4 py-3 text-left">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($allConfiguredPrograms)) : foreach ($allConfiguredPrograms as $configuredProgram) : ?>
+                    <tr class="border-b hover:bg-gray-50 transition">
+                        <?php $formId = 'program-form-' . (int)$configuredProgram['id']; ?>
+                        <td class="px-4 py-3">
+                            <input
+                                type="text"
+                                name="program_name"
+                                form="<?= $formId ?>"
+                                value="<?= htmlspecialchars($configuredProgram['name']) ?>"
+                                class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200"
+                                required>
+                        </td>
+                        <td class="px-4 py-3">
+                            <input
+                                type="number"
+                                name="scholarship_percentage"
+                                form="<?= $formId ?>"
+                                min="0"
+                                max="100"
+                                step="0.01"
+                                value="<?= htmlspecialchars(rtrim(rtrim(number_format((float)$configuredProgram['scholarship_percentage'], 2, '.', ''), '0'), '.')) ?>"
+                                class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200"
+                                required>
+                        </td>
+                        <td class="px-4 py-3">
+                            <?php if ((int)$configuredProgram['is_active'] === 1) : ?>
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">Activa</span>
+                            <?php else : ?>
+                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-700">Inactiva</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="px-4 py-3">
+                            <form id="<?= $formId ?>" action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="inline-block mr-2">
+                                <input type="hidden" name="action" value="update_program">
+                                <input type="hidden" name="program_id" value="<?= (int)$configuredProgram['id'] ?>">
+                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                                    Actualizar
+                                </button>
+                            </form>
+
+                            <form action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="inline-block">
+                                <input type="hidden" name="program_id" value="<?= (int)$configuredProgram['id'] ?>">
+                                <?php if ((int)$configuredProgram['is_active'] === 1) : ?>
+                                    <input type="hidden" name="action" value="deactivate_program">
+                                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                                        Desactivar
+                                    </button>
+                                <?php else : ?>
+                                    <input type="hidden" name="action" value="activate_program">
+                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow">
+                                        Activar
+                                    </button>
+                                <?php endif; ?>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach;
+                else : ?>
+                    <tr>
+                        <td colspan="4" class="text-center py-6 text-gray-500">No hay carreras configuradas todavía.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>

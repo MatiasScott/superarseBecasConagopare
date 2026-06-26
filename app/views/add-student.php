@@ -100,23 +100,24 @@
                         <label for="program" class="block text-gray-700 text-sm font-bold mb-2">Carrera:</label>
                         <select id="program" name="program" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                             <option value="">Seleccione</option>
-                            <option value="Técnico Superior en Ventas Estratégicas con IA">Técnico Superior en Ventas Estratégicas con IA</option>
-                            <option value="Tecnólogo en Educación Básica">Tecnólogo en Educación Básica</option>
-                            <option value="Tecnología Superior en Enfermería Veterinaria">Tecnología Superior en Enfermería Veterinaria</option>
-                            <option value="Tecnólogo en Producción Animal">Tecnólogo en Producción Animal</option>
-                            <option value="Técnico Superior en Marketing Digital">Técnico Superior en Marketing Digital</option>
-                            <option value="Seguridad e Higiene del Trabajo">Seguridad e Higiene del Trabajo</option>
-                            <option value="Seguridad y Prevención de Riesgos Laborales">Seguridad y Prevención de Riesgos Laborales</option>
-                            <option value="Técnico Superior en Administración">Técnico Superior en Administración</option>
-                            <option value="Tecnología Superior en Topografía">Tecnología Superior en Topografía</option>
-                            <option value="Tecnólogo en Minería">Tecnólogo en Minería</option>
+                            <?php if (!empty($programs)) : foreach ($programs as $program) : ?>
+                                <option value="<?= htmlspecialchars($program['name']) ?>">
+                                    <?= htmlspecialchars($program['name']) ?>
+                                </option>
+                            <?php endforeach;
+                            endif; ?>
                         </select>
+                        <?php if (empty($programs)) : ?>
+                            <p class="text-xs text-amber-700 mt-2">
+                                No hay carreras configuradas. Solicita al administrador que las cree desde el panel admin.
+                            </p>
+                        <?php endif; ?>
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Beca asignada</label>
                         <input type="text" id="scholarship-preview"
                             class="w-full border rounded-lg p-2 bg-gray-100 text-gray-700"
-                            value="20%"
+                            value=""
                             readonly>
                     </div>
 
@@ -141,6 +142,9 @@
             </div>
         </form>
     </div>
+    <script>
+        window.PROGRAM_SCHOLARSHIPS = <?= json_encode($programScholarships ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    </script>
     <script src="/landingPage_BecasConagopare/public/js/add_student.js"></script>
 </body>
 
