@@ -17,6 +17,7 @@ class StudentModel extends BaseModel
             'convenio_percentage' => "ALTER TABLE students ADD COLUMN convenio_percentage DECIMAL(5,2) NULL",
             'sede' => "ALTER TABLE students ADD COLUMN sede VARCHAR(150) NULL",
             'modalidad' => "ALTER TABLE students ADD COLUMN modalidad VARCHAR(100) NULL",
+            'deleted_at' => "ALTER TABLE students ADD COLUMN deleted_at DATETIME NULL",
         ];
 
         foreach ($columnsToEnsure as $column => $sql) {
@@ -37,7 +38,7 @@ class StudentModel extends BaseModel
 
     public function getAllStudents()
     {
-        $stmt = $this->db->prepare("SELECT * FROM students");
+        $stmt = $this->db->prepare("SELECT * FROM students WHERE deleted_at IS NULL");
         $stmt->execute();
         return $stmt->fetchAll(); // Retorna todos los estudiantes
     }
@@ -46,7 +47,7 @@ class StudentModel extends BaseModel
     {
         try {
             // Prepara la consulta para seleccionar solo los estudiantes de un usuario específico
-            $sql = "SELECT * FROM students WHERE registered_by_user_id = :user_id";
+            $sql = "SELECT * FROM students WHERE registered_by_user_id = :user_id AND deleted_at IS NULL";
 
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
@@ -169,7 +170,7 @@ class StudentModel extends BaseModel
                 students s
             JOIN 
                 users u ON s.registered_by_user_id = u.id
-            WHERE 1=1";
+            WHERE s.deleted_at IS NULL";
         $params = [];
 
         if (isset($filters['program'])) {
@@ -221,6 +222,7 @@ class StudentModel extends BaseModel
                 FROM students
                 WHERE id = :id
                   AND registered_by_user_id = :user_id
+                                    AND deleted_at IS NULL
                 LIMIT 1";
 
         $stmt = $this->db->prepare($sql);
@@ -258,7 +260,8 @@ class StudentModel extends BaseModel
                     scholarship = :scholarship,
                     academic_period = :academic_period
                 WHERE id = :id
-                  AND registered_by_user_id = :registered_by_user_id";
+                                    AND registered_by_user_id = :registered_by_user_id
+                                    AND deleted_at IS NULL";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':first_name', $data['first_name']);
@@ -292,14 +295,14 @@ class StudentModel extends BaseModel
     
     public function countAllStudents()
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM students");
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM students WHERE deleted_at IS NULL");
         $stmt->execute();
         return $stmt->fetchColumn();
     }
 
     public function countStudentsByStatus($status)
     {
-        $stmt = $this->db->prepare("SELECT COUNT(*) FROM students WHERE status = :status");
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM students WHERE status = :status AND deleted_at IS NULL");
         $stmt->bindParam(':status', $status, PDO::PARAM_STR);
         $stmt->execute();
         return $stmt->fetchColumn();
@@ -312,6 +315,7 @@ class StudentModel extends BaseModel
                 WHERE program IS NOT NULL
                   AND program <> ''
                   AND registered_by_user_id = :user_id
+                                    AND deleted_at IS NULL
                 ORDER BY program ASC";
     
         $stmt = $this->db->prepare($sql);
@@ -319,6 +323,23 @@ class StudentModel extends BaseModel
         $stmt->execute();
     
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function softDeleteStudentByUser($studentId, $userId)
+    {
+        $sql = "UPDATE students
+                SET deleted_at = NOW(),
+                    status = 'anulado'
+                WHERE id = :id
+                  AND registered_by_user_id = :user_id
+                  AND deleted_at IS NULL";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $studentId, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
 }

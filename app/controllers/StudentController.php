@@ -192,6 +192,28 @@ class StudentController
         require_once __DIR__ . '/../views/edit-student.php';
     }
 
+    public function deleteStudent($studentId)
+    {
+        if (
+            !isset($_SESSION['user_id']) ||
+            $_SESSION['user_role'] != 0 ||
+            $_SERVER['REQUEST_METHOD'] !== 'POST'
+        ) {
+            header("Location: /landingPage_BecasConagopare/public/login");
+            exit();
+        }
+
+        $studentId = (int)$studentId;
+        $userId = (int)$_SESSION['user_id'];
+
+        if ($this->studentModel->softDeleteStudentByUser($studentId, $userId)) {
+            $this->logModel->logAction($userId, 'Estudiante eliminado (borrado lógico)');
+        }
+
+        header("Location: /landingPage_BecasConagopare/public/student-list");
+        exit();
+    }
+
     private function resolveScholarshipPayload($program, $requestData)
     {
         $isConvenio = isset($requestData['is_convenio']) && $requestData['is_convenio'] === '1';

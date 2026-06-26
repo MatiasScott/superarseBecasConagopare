@@ -61,6 +61,7 @@
                     <th class="px-4 py-3 text-center">Beca</th>
                     <th class="px-4 py-3 text-left">Periodo</th>
                     <th class="px-4 py-3 text-center">Editar</th>
+                    <th class="px-4 py-3 text-center">Eliminar</th>
                     <th class="px-4 py-3 text-center">Acta</th>
                 </tr>
             </thead>
@@ -121,6 +122,14 @@
                             </td>
 
                             <td class="px-4 py-3 text-center">
+                                <form action="/landingPage_BecasConagopare/public/delete-student/<?= (int)$student['id'] ?>" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+                                    <button type="submit" class="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg text-xs shadow">
+                                        🗑 Eliminar
+                                    </button>
+                                </form>
+                            </td>
+
+                            <td class="px-4 py-3 text-center">
                                 <a href="/landingPage_BecasConagopare/public/student-invoice/<?= $student['id'] ?>"
                                     target="_blank"
                                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs shadow">
@@ -131,7 +140,7 @@
                     <?php endforeach;
                 else : ?>
                     <tr>
-                        <td colspan="12" class="text-center py-6 text-gray-500">
+                        <td colspan="13" class="text-center py-6 text-gray-500">
                             No hay estudiantes registrados.
                         </td>
                     </tr>
