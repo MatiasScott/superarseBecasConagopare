@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso | Becas Superarse</title>
-    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(asset_url('img/logo_instituto.png')) ?>" />
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -26,56 +26,88 @@
             /* Esmeralda, un color vibrante */
             border-color: #10B981;
         }
+
+        .login-image-panel,
+        .login-form-panel {
+            width: 100%;
+            max-width: 100%;
+            flex: 1 1 auto;
+        }
+
+        @media (min-width: 1024px) {
+            .login-image-panel {
+                flex: 0 0 70%;
+                max-width: 70%;
+            }
+
+            .login-form-panel {
+                flex: 0 0 30%;
+                max-width: 30%;
+            }
+        }
     </style>
 </head>
 
-<body class="bg-gray-50 flex items-center justify-end min-h-screen" style="background-image: url('/landingPage_BecasConagopare/public/img/Fondo-Pagina-Becas-WebGrande.jpg');">
+<body class="bg-gray-100 min-h-screen">
 
-    <div class="login-card bg-white p-10 rounded-xl w-full max-w-md border border-gray-200 mr-16">
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        <section class="login-image-panel relative">
+            <img id="login-side-image"
+                src="<?= htmlspecialchars(asset_url('img/Fondo-Pagina-Becas-WebGrande.jpg')) ?>"
+                alt="Fondo Programa de Becas"
+                class="w-full h-64 lg:h-screen object-cover">
+            <div class="absolute inset-0 bg-black/20"></div>
+        </section>
 
-        <div class="text-center mb-8">
-            
-            <h1 class="text-2xl font-extrabold text-gray-900 mt-3">
-                Programa de Becas
-            </h1>
-            <p class="text-sm text-gray-600">
-                Superarse
-            </p>
-        </div>
+        <section class="login-form-panel flex items-center justify-center p-6 lg:p-10">
 
-        <h2 class="text-xl font-semibold text-center mb-6 text-gray-700">Iniciar Sesión</h2>
+            <div class="login-card bg-white p-10 rounded-xl w-full max-w-md border border-gray-200">
 
-        <?php if (isset($error_message) && $error_message): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <strong class="font-bold">Error:</strong>
-                <span class="block sm:inline"><?php echo htmlspecialchars($error_message); ?></span>
+                <div class="text-center mb-8">
+
+                    <h1 class="text-2xl font-extrabold text-gray-900 mt-3">
+                        Programa de Becas
+                    </h1>
+                    <p class="text-sm text-gray-600">
+                        Superarse
+                    </p>
+                </div>
+
+                <h2 class="text-xl font-semibold text-center mb-6 text-gray-700">Iniciar Sesión</h2>
+
+                <?php if (isset($error_message) && $error_message): ?>
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <strong class="font-bold">Error:</strong>
+                        <span class="block sm:inline"><?php echo htmlspecialchars($error_message); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form action="<?= htmlspecialchars(app_url('/login')) ?>" method="POST">
+                    <div class="mb-4">
+                        <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Correo Electrónico</label>
+                        <input type="email" id="email" name="email"
+                            placeholder="ejemplo@correo.com"
+                            class="input-focus-ring shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out"
+                            required>
+                    </div>
+
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Contraseña</label>
+                        <input type="password" id="password" name="password"
+                            placeholder="••••••••"
+                            class="input-focus-ring shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out"
+                            required>
+                    </div>
+
+                    <div class="flex flex-col gap-4">
+                        <button type="submit"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150 ease-in-out shadow-md hover:shadow-lg">
+                            Entrar
+                        </button>
+                    </div>
+                </form>
             </div>
-        <?php endif; ?>
-
-        <form action="/landingPage_BecasConagopare/public/login" method="POST">
-            <div class="mb-4">
-                <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Correo Electrónico</label>
-                <input type="email" id="email" name="email"
-                    placeholder="ejemplo@correo.com"
-                    class="input-focus-ring shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out"
-                    required>
-            </div>
-
-            <div class="mb-6">
-                <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Contraseña</label>
-                <input type="password" id="password" name="password"
-                    placeholder="••••••••"
-                    class="input-focus-ring shadow-sm appearance-none border border-gray-300 rounded-lg w-full py-2.5 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-150 ease-in-out"
-                    required>
-            </div>
-
-            <div class="flex flex-col gap-4">
-                <button type="submit"
-                    class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150 ease-in-out shadow-md hover:shadow-lg">
-                    Entrar
-                </button>
-            </div>
-        </form>
+        </section>
     </div>
 
     <div id="successModal" class="fixed inset-0 bg-gray-900 bg-opacity-70 overflow-y-auto h-full w-full hidden z-50">
@@ -105,6 +137,23 @@
     </div>
 
     <script>
+        const loginImage = document.getElementById('login-side-image');
+        if (loginImage) {
+            const imageFallbacks = [
+                '<?= htmlspecialchars(asset_url('img/Fondo-Pagina-Becas-WebGrande.jpg')) ?>',
+                '<?= htmlspecialchars(asset_url('img/Fondo-Pagina-Becas-WebMediana02.jpg')) ?>',
+                '<?= htmlspecialchars(asset_url('img/PORTADA.jpg')) ?>'
+            ];
+            let currentFallbackIndex = 0;
+
+            loginImage.addEventListener('error', function () {
+                currentFallbackIndex += 1;
+                if (currentFallbackIndex < imageFallbacks.length) {
+                    loginImage.src = imageFallbacks[currentFallbackIndex];
+                }
+            });
+        }
+
         // Script para mostrar y cerrar el modal (Mantenido y adaptado)
         const successModal = document.getElementById('successModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
@@ -131,7 +180,7 @@
             });
         }
     </script>
-    <script src="/landingPage_BecasConagopare/public/js/global.js"></script>
+    <script src="<?= htmlspecialchars(asset_url('js/global.js')) ?>"></script>
 
 </body>
 

@@ -36,7 +36,7 @@ class StudentController
     {
         // Verifica si el usuario está autenticado y su rol (esto está bien)
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -56,7 +56,7 @@ class StudentController
     {
         // Verifica si el usuario está autenticado y su rol
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -101,7 +101,7 @@ class StudentController
             // Llama al método del modelo una sola vez y almacena el resultado
             if ($this->studentModel->addStudent($data)) {
                 $this->logModel->logAction($_SESSION['user_id'], 'Nuevo estudiante registrado');
-                header("Location: /landingPage_BecasConagopare/public/student-list");
+                header("Location: " . app_url('/student-list'));
                 exit();
             } else {
                 echo "Error al registrar al estudiante.";
@@ -122,7 +122,7 @@ class StudentController
     public function editStudent($studentId)
     {
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -131,7 +131,7 @@ class StudentController
 
         $student = $this->studentModel->getStudentByIdAndUserId($studentId, $userId);
         if (!$student) {
-            header("Location: /landingPage_BecasConagopare/public/student-list");
+            header("Location: " . app_url('/student-list'));
             exit();
         }
 
@@ -174,7 +174,7 @@ class StudentController
 
             if ($this->studentModel->updateStudentByUser($data)) {
                 $this->logModel->logAction($userId, 'Estudiante actualizado por usuario');
-                header("Location: /landingPage_BecasConagopare/public/student-list");
+                header("Location: " . app_url('/student-list'));
                 exit();
             }
 
@@ -199,7 +199,7 @@ class StudentController
             $_SESSION['user_role'] != 0 ||
             $_SERVER['REQUEST_METHOD'] !== 'POST'
         ) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -210,7 +210,7 @@ class StudentController
             $this->logModel->logAction($userId, 'Estudiante eliminado (borrado lógico)');
         }
 
-        header("Location: /landingPage_BecasConagopare/public/student-list");
+        header("Location: " . app_url('/student-list'));
         exit();
     }
 
@@ -246,7 +246,7 @@ class StudentController
     {
         // Verifica que el usuario sea administrador
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 1) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -369,7 +369,7 @@ class StudentController
 
     private function redirectScholarshipConfig($status)
     {
-        header('Location: /landingPage_BecasConagopare/public/dashboard-admin?view=scholarships&status=' . urlencode($status));
+        header('Location: ' . app_url('/dashboard-admin?view=scholarships&status=' . urlencode($status)));
         exit();
     }
 
@@ -395,7 +395,7 @@ class StudentController
     {
         // 1. Verificar si el usuario es un administrador (rol 1)
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 1) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -483,7 +483,7 @@ class StudentController
     {
         // Verifica si el usuario tiene rol 0 para acceder
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 0) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -589,7 +589,7 @@ class StudentController
             $_SESSION['user_role'] != 1 ||
             $_SERVER['REQUEST_METHOD'] !== 'POST'
         ) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -601,7 +601,7 @@ class StudentController
         $this->studentModel->updateStudent($studentData);
 
         // REDIRECCIÓN CORRECTA
-        header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
+        header("Location: " . app_url('/dashboard-admin'));
         exit();
     }
 }

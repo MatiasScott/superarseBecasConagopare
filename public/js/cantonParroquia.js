@@ -3,7 +3,7 @@ const cantonSelect = document.getElementById('canton_id');
 const parishSelect = document.getElementById('parish_id');
 
 if (cantonSelect && parishSelect) {
-    const appBasePath = window.BASE_PATH || '/landingPage_BecasConagopare/public';
+    const appBasePath = window.BASE_PATH || window.location.pathname.replace(/\/[^/]*$/, '');
 
     // Agrega un 'escuchador' de eventos al select de cantones
     cantonSelect.addEventListener('change', async function() {

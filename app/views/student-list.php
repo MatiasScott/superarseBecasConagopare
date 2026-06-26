@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Estudiantes</title>
-    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(asset_url('img/logo_instituto.png')) ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -24,17 +24,17 @@
         </div>
 
         <div class="flex gap-3 mt-4 md:mt-0">
-            <a href="/landingPage_BecasConagopare/public/add-student"
+            <a href="<?= htmlspecialchars(app_url('/add-student')) ?>"
                 class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 ➕ Nuevo Estudiante
             </a>
 
-            <a href="/landingPage_BecasConagopare/public/change-password"
+            <a href="<?= htmlspecialchars(app_url('/change-password')) ?>"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔑 Cambiar Contraseña
             </a>
 
-            <a href="/landingPage_BecasConagopare/public/logout"
+            <a href="<?= htmlspecialchars(app_url('/logout')) ?>"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔒 Cerrar Sesión
             </a>
@@ -120,14 +120,14 @@
                             <td class="px-4 py-3"><?= htmlspecialchars($student['academic_period']) ?></td>
 
                             <td class="px-4 py-3 text-center">
-                                <a href="/landingPage_BecasConagopare/public/edit-student/<?= (int)$student['id'] ?>"
+                                <a href="<?= htmlspecialchars(app_url('/edit-student/' . (int)$student['id'])) ?>"
                                     class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs shadow">
                                     ✏️ Editar
                                 </a>
                             </td>
 
                             <td class="px-4 py-3 text-center">
-                                <form action="/landingPage_BecasConagopare/public/delete-student/<?= (int)$student['id'] ?>" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
+                                <form action="<?= htmlspecialchars(app_url('/delete-student/' . (int)$student['id'])) ?>" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este registro?');">
                                     <button type="submit" class="inline-flex items-center bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg text-xs shadow">
                                         🗑 Eliminar
                                     </button>
@@ -135,7 +135,7 @@
                             </td>
 
                             <td class="px-4 py-3 text-center">
-                                <a href="/landingPage_BecasConagopare/public/student-invoice/<?= $student['id'] ?>"
+                                <a href="<?= htmlspecialchars(app_url('/student-invoice/' . (int)$student['id'])) ?>"
                                     target="_blank"
                                     class="inline-flex items-center bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-xs shadow">
                                     📄 Ver Acta
@@ -155,7 +155,7 @@
     </div>
 
     <!-- JS BUSCADOR -->
-    <script src="/landingPage_BecasConagopare/public/js/stundet_list.js"></script>
+    <script src="<?= htmlspecialchars(asset_url('js/stundet_list.js')) ?>"></script>
 
 </body>
 

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actualizar Contraseña</title>
-    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(asset_url('img/logo_instituto.png')) ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -26,7 +26,7 @@
             <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">No se pudo actualizar la contraseña.</div>
         <?php endif; ?>
 
-        <form action="/landingPage_BecasConagopare/public/change-password" method="POST" class="space-y-4">
+        <form action="<?= htmlspecialchars(app_url('/change-password')) ?>" method="POST" class="space-y-4">
             <div>
                 <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña actual</label>
                 <input type="password" id="current_password" name="current_password" class="w-full border rounded-lg p-2 focus:ring focus:ring-blue-200" required>
@@ -46,7 +46,7 @@
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
                     Guardar
                 </button>
-                <a href="<?= (isset($_SESSION['user_role']) && (int)$_SESSION['user_role'] === 1) ? '/landingPage_BecasConagopare/public/dashboard-admin' : '/landingPage_BecasConagopare/public/student-list' ?>"
+                <a href="<?= (isset($_SESSION['user_role']) && (int)$_SESSION['user_role'] === 1) ? htmlspecialchars(app_url('/dashboard-admin')) : htmlspecialchars(app_url('/student-list')) ?>"
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg">
                     Volver
                 </a>

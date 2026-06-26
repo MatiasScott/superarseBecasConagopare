@@ -50,9 +50,9 @@ class AuthController
 
                 // Redirige según el rol
                 if ($user['role'] == 1) {
-                    header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
+                    header("Location: " . app_url('/dashboard-admin'));
                 } else {
-                    header("Location: /landingPage_BecasConagopare/public/student-list");
+                    header("Location: " . app_url('/student-list'));
                 }
                 exit();
             } else {
@@ -90,11 +90,11 @@ class AuthController
 
                 // Redirige a la página de login con un parámetro de éxito
                 //header("Location: /landing_becasconagopare/public/login?status=success");
-                header("Location: /landingPage_BecasConagopare/public/dashboard-admin");
+                header("Location: " . app_url('/dashboard-admin'));
                 exit();
             } else {
                 // Maneja el error
-                header("Location: /landingPage_BecasConagopare/public/register?status=error");
+                header("Location: " . app_url('/register?status=error'));
                 exit();
             }
         } else {
@@ -131,14 +131,14 @@ class AuthController
     {
         $_SESSION = array();
         session_destroy();
-        header("Location: /landingPage_BecasConagopare/public/login");
+        header("Location: " . app_url('/login'));
         exit();
     }
 
     public function changePassword()
     {
         if (!isset($_SESSION['user_id'])) {
-            header("Location: /landingPage_BecasConagopare/public/login");
+            header("Location: " . app_url('/login'));
             exit();
         }
 
@@ -150,29 +150,29 @@ class AuthController
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
             if ($newPassword !== $confirmPassword) {
-                header("Location: /landingPage_BecasConagopare/public/change-password?status=not_match");
+                header("Location: " . app_url('/change-password?status=not_match'));
                 exit();
             }
 
             if (strlen($newPassword) < 6) {
-                header("Location: /landingPage_BecasConagopare/public/change-password?status=weak_password");
+                header("Location: " . app_url('/change-password?status=weak_password'));
                 exit();
             }
 
             $user = $this->userModel->findUserById($userId);
             if (!$user || !password_verify($currentPassword, $user['password'])) {
-                header("Location: /landingPage_BecasConagopare/public/change-password?status=wrong_current");
+                header("Location: " . app_url('/change-password?status=wrong_current'));
                 exit();
             }
 
             $passwordHash = password_hash($newPassword, PASSWORD_DEFAULT);
             if ($this->userModel->updatePasswordById($userId, $passwordHash)) {
                 $this->logModel->logAction($userId, 'Usuario actualizó su contraseña');
-                header("Location: /landingPage_BecasConagopare/public/change-password?status=updated");
+                header("Location: " . app_url('/change-password?status=updated'));
                 exit();
             }
 
-            header("Location: /landingPage_BecasConagopare/public/change-password?status=error");
+            header("Location: " . app_url('/change-password?status=error'));
             exit();
         }
 

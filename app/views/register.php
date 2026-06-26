@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Usuario | Programa de Becas</title>
-    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(asset_url('img/logo_instituto.png')) ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Estilos personalizados para consistencia con el Login */
@@ -44,7 +44,7 @@
             </p>
         </div>
 
-        <form action="/landingPage_BecasConagopare/public/register" method="POST">
+        <form action="<?= htmlspecialchars(app_url('/register')) ?>" method="POST">
 
             <div class="hidden">
                 <input type="number" id="role" name="role" value="0">
@@ -148,7 +148,7 @@
                 </button>
 
                 <div class="flex flex-col sm:flex-row gap-4 items-center">
-                    <a href="/landingPage_BecasConagopare/public/dashboard-admin" class="inline-block align-baseline font-semibold text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
+                    <a href="<?= htmlspecialchars(app_url('/dashboard-admin')) ?>" class="inline-block align-baseline font-semibold text-sm text-blue-600 hover:text-blue-800 transition duration-150 ease-in-out">
                         Regresar
                     </a>
                 </div>
@@ -171,7 +171,7 @@
                     </p>
                 </div>
                 <div class="items-center px-4 py-3">
-                    <button id="ok-btn" onclick="window.location.href='/landingPage_BecasConagopare/public/login'" class="px-4 py-2 bg-emerald-600 text-white text-base font-medium rounded-lg w-full shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300">
+                    <button id="ok-btn" onclick="window.location.href='<?= htmlspecialchars(app_url('/login')) ?>'" class="px-4 py-2 bg-emerald-600 text-white text-base font-medium rounded-lg w-full shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300">
                         Ir a Iniciar Sesión
                     </button>
                 </div>
@@ -186,11 +186,11 @@
         // Cierra el modal al hacer clic en OK (y redirige al login)
         if (okBtn) {
             okBtn.addEventListener('click', () => {
-                window.location.href = '/landingPage_BecasConagopare/public/login';
+                window.location.href = '<?= htmlspecialchars(app_url('/login')) ?>';
             });
         }
     </script>
-    <script src="/landingPage_BecasConagopare/public/js/cantonParroquia.js"></script>
+    <script src="<?= htmlspecialchars(asset_url('js/cantonParroquia.js')) ?>"></script>
 </body>
 
 </html>

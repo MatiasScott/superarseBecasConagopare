@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
-    <link rel="icon" type="image/png" href="/landingPage_BecasConagopare/public/img/logo_instituto.png" />
+    <link rel="icon" type="image/png" href="<?= htmlspecialchars(asset_url('img/logo_instituto.png')) ?>" />
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -36,15 +36,15 @@
             <p class="text-sm text-gray-600">Gestión de estudiantes y usuarios administrativos</p>
         </div>
         <div class="flex space-x-2 mt-4 md:mt-0">
-            <a href="/landingPage_BecasConagopare/public/register"
+            <a href="<?= htmlspecialchars(app_url('/register')) ?>"
                 class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 ➕ Registrar Usuario
             </a>
-            <a href="/landingPage_BecasConagopare/public/change-password"
+            <a href="<?= htmlspecialchars(app_url('/change-password')) ?>"
                 class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔑 Cambiar Contraseña
             </a>
-            <a href="/landingPage_BecasConagopare/public/logout"
+            <a href="<?= htmlspecialchars(app_url('/logout')) ?>"
                 class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow">
                 🔒 Cerrar Sesión
             </a>
@@ -54,15 +54,15 @@
     <!-- Menú principal -->
     <nav class="bg-white p-3 rounded-2xl shadow-lg mb-6">
         <div class="flex gap-3 flex-wrap">
-            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=students"
+            <a href="<?= htmlspecialchars(app_url('/dashboard-admin?view=students')) ?>"
                 class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'students' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
                 📋 Estudiantes
             </a>
-            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=users"
+            <a href="<?= htmlspecialchars(app_url('/dashboard-admin?view=users')) ?>"
                 class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
                 👥 Usuarios Administrativos
             </a>
-            <a href="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships"
+            <a href="<?= htmlspecialchars(app_url('/dashboard-admin?view=scholarships')) ?>"
                 class="px-4 py-2 rounded-lg font-semibold <?= ($view ?? 'students') === 'scholarships' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' ?>">
                 🎯 Carreras y Becas
             </a>
@@ -95,7 +95,7 @@
     <div class="bg-white p-6 rounded-2xl shadow-lg mb-6">
             <h3 class="text-lg font-bold mb-4 text-gray-700">🔍 Filtros</h3>
     
-            <form action="/landingPage_BecasConagopare/public/dashboard-admin" method="GET"
+            <form action="<?= htmlspecialchars(app_url('/dashboard-admin')) ?>" method="GET"
                 class="grid grid-cols-1 md:grid-cols-4 gap-4">
     
                 <div>
@@ -138,7 +138,7 @@
             </div>
 
             <div class="flex items-end">
-                <a href="/landingPage_BecasConagopare/public/export-excel"
+                <a href="<?= htmlspecialchars(app_url('/export-excel')) ?>"
                     class="w-full text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg shadow">
                     📥 Exportar
                 </a>
@@ -238,7 +238,7 @@
         <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl animate-fade-in">
             <h3 class="text-xl font-bold mb-4">✏️ Actualizar Estudiante</h3>
 
-            <form action="/landingPage_BecasConagopare/public/update-student" method="POST" class="space-y-4">
+            <form action="<?= htmlspecialchars(app_url('/update-student')) ?>" method="POST" class="space-y-4">
                 <input type="hidden" name="id" id="modal-student-id">
 
                 <div>
@@ -273,7 +273,7 @@
     </div>
 
     <!-- JS -->
-    <script src="/landingPage_BecasConagopare/public/js/dashboardAdmin.js"></script>
+    <script src="<?= htmlspecialchars(asset_url('js/dashboardAdmin.js')) ?>"></script>
 
     <?php elseif (($view ?? 'students') === 'users') : ?>
 
@@ -341,7 +341,7 @@
             <div class="mb-4 p-3 rounded-lg bg-yellow-100 text-yellow-800 text-sm">Carrera desactivada correctamente.</div>
         <?php endif; ?>
 
-        <form action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <form action="<?= htmlspecialchars(app_url('/dashboard-admin?view=scholarships')) ?>" method="POST" class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <input type="hidden" name="action" value="create_program">
 
             <div>
@@ -420,7 +420,7 @@
                             <?php endif; ?>
                         </td>
                         <td class="px-4 py-3">
-                            <form id="<?= $formId ?>" action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="inline-block mr-2">
+                            <form id="<?= $formId ?>" action="<?= htmlspecialchars(app_url('/dashboard-admin?view=scholarships')) ?>" method="POST" class="inline-block mr-2">
                                 <input type="hidden" name="action" value="update_program">
                                 <input type="hidden" name="program_id" value="<?= (int)$configuredProgram['id'] ?>">
                                 <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 rounded-lg shadow">
@@ -428,7 +428,7 @@
                                 </button>
                             </form>
 
-                            <form action="/landingPage_BecasConagopare/public/dashboard-admin?view=scholarships" method="POST" class="inline-block">
+                            <form action="<?= htmlspecialchars(app_url('/dashboard-admin?view=scholarships')) ?>" method="POST" class="inline-block">
                                 <input type="hidden" name="program_id" value="<?= (int)$configuredProgram['id'] ?>">
                                 <?php if ((int)$configuredProgram['is_active'] === 1) : ?>
                                     <input type="hidden" name="action" value="deactivate_program">
